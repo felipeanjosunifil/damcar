@@ -26,6 +26,25 @@ public class UsuarioController {
 
     @PutMapping("/usuarios/editar")
     public boolean editarUsuario(@RequestBody Usuario usuario) {
-        return false;
+
+        boolean usuarioAtualizar = false;
+        int index = 0;
+
+        for (Usuario usuarioAux: usuarios) {
+
+            if (!usuarioAtualizar) {
+                index++;
+            }
+            if (usuarioAux.getId() == usuario.getId()) {
+                usuarioAtualizar = true;
+            }
+        }
+
+        if (usuarioAtualizar) {
+            usuarios.set(index - 1, usuario);
+            return true;
+        } else {
+            return false;
+        }
     }
 }
