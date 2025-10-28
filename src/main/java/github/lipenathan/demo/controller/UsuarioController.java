@@ -27,21 +27,44 @@ public class UsuarioController {
     @PutMapping("/usuarios/editar")
     public boolean editarUsuario(@RequestBody Usuario usuario) {
 
-        boolean usuarioAtualizar = false;
+        boolean atualizarUsuario = false;
         int index = 0;
 
         for (Usuario usuarioAux: usuarios) {
 
-            if (!usuarioAtualizar) {
+            if (!atualizarUsuario) {
                 index++;
             }
             if (usuarioAux.getId() == usuario.getId()) {
-                usuarioAtualizar = true;
+                atualizarUsuario = true;
             }
         }
 
-        if (usuarioAtualizar) {
+        if (atualizarUsuario) {
             usuarios.set(index - 1, usuario);
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    @DeleteMapping("/usuarios/{id}")
+    public boolean deletarUsuario(@PathVariable("id") int id) {
+        boolean deletarUsuario = false;
+        int index = 0;
+
+        for (Usuario usuarioAux: usuarios) {
+
+            if (!deletarUsuario) {
+                index++;
+            }
+            if (usuarioAux.getId() == id) {
+                deletarUsuario = true;
+            }
+        }
+
+        if (deletarUsuario) {
+            usuarios.remove(index - 1);
             return true;
         } else {
             return false;
