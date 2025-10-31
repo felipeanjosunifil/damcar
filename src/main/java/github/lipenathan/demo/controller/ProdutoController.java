@@ -70,7 +70,7 @@ public class ProdutoController {
 
         produtos.remove(deletar);
 
-//        produtos.removeIf(p -> p.getId() == id);//forma reduzida para remover idem
+//        produtos.removeIf(p -> p.getId() == id);//forma reduzida para remover item
 
         return true;
     }
