@@ -40,4 +40,25 @@ public class UsuarioController {
         return true;
     }
 
+    @DeleteMapping("/usuarios/{id}")
+    public boolean deletarUsuario(@PathVariable("id") int id) {
+        int index = -1;
+        int deletar = 0;
+        boolean deletou;
+
+        /* lógica mais complexa
+
+        for (Usuario u : usuarios) {
+            index++;
+            if (u.getId() == id) {
+                deletar = index;
+            }
+        }
+
+        */
+
+        deletou = usuarios.removeIf(u -> u.getId() == id); //lógica mais simples de deleção
+
+        return deletou;
+    }
 }
