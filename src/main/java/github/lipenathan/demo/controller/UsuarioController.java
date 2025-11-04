@@ -1,6 +1,7 @@
 package github.lipenathan.demo.controller;
 
 import github.lipenathan.demo.model.Usuario;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
@@ -15,34 +16,34 @@ public class UsuarioController {
     private List<Usuario> usuarios = new ArrayList<>();
 
     @PostMapping("/novo")
-    public boolean novoUsuario(@RequestBody Usuario usuario) {
+    public ResponseEntity<Boolean> novoUsuario(@RequestBody Usuario usuario) {
         usuario.setId(++id);
         usuarios.add(usuario);
-        return true;
+        return ResponseEntity.status(201).body(true);
     }
 
     @GetMapping
-    public List<Usuario> getUsuarios() {
-        return usuarios;
+    public ResponseEntity<List<Usuario>> getUsuarios() {
+        return ResponseEntity.ok(usuarios);
     }
 
     @GetMapping("/consulta")
-    public List<Usuario> consultaUsuarios(@RequestParam("email") String email, @RequestParam("nome") String nome) {
+    public ResponseEntity<List<Usuario>> consultaUsuarios(@RequestParam("email") String email, @RequestParam("nome") String nome) {
         List<Usuario> usuariosEncontrados;
 
         usuariosEncontrados = usuarios.stream().filter(usuario -> usuario.getEmail().contains(email) && usuario.getNome().contains(nome)).toList();
 
-        return usuariosEncontrados;
+        return ResponseEntity.ok(usuariosEncontrados);
     }
 
     @DeleteMapping("/apagar/{id}")
-    public boolean apagarUsuario(@PathVariable("id") int id) {
+    public ResponseEntity<Boolean> apagarUsuario(@PathVariable("id") int id) {
         boolean deletou = usuarios.removeIf(usuario -> usuario.getId() == id);
-        return deletou;
+        return ResponseEntity.ok(deletou);
     }
 
     @PutMapping("/atualizar")
-    public boolean atualizarUsuario(@RequestBody Usuario usuario) {
+    public ResponseEntity<Boolean> atualizarUsuario(@RequestBody Usuario usuario) {
         boolean atualizou = false;
 
         for (Usuario usuarioAux : usuarios) {
@@ -54,6 +55,6 @@ public class UsuarioController {
             }
         }
 
-        return atualizou;
+        return ResponseEntity.ok(atualizou);
     }
 }
