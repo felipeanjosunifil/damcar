@@ -1,31 +1,33 @@
 package github.lipenathan.demo.controller;
 
 import github.lipenathan.demo.modelo.Usuario;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
 import java.util.ArrayList;
 import java.util.List;
 
 @RestController
+@RequestMapping("/usuarios")
 public class UsuarioController {
 
     private int id = 0;
     private List<Usuario> usuarios = new ArrayList<>();
 
-    @PostMapping("/usuarios/novo")
-    public boolean novoUsuario(@RequestBody Usuario usuario) {
+    @PostMapping("/novo")
+    public ResponseEntity<Boolean> novoUsuario(@RequestBody Usuario usuario) {
         usuario.setId(++id);
         usuarios.add(usuario);
-        return true;
+
+        return ResponseEntity.status(201).body(true);
     }
 
-    @GetMapping("/usuarios")
-    public List<Usuario> getUsuarios() {
-        return usuarios;
+    @GetMapping
+    public ResponseEntity<List<Usuario>> getUsuarios() {
+        return ResponseEntity.ok(usuarios);
     }
 
-    @PutMapping("/usuarios/editar")
-    public boolean editarUsuario(@RequestBody Usuario usuario) {
+    @PutMapping("/editar")
+    public ResponseEntity<Boolean> editarUsuario(@RequestBody Usuario usuario) {
 
         boolean atualizarUsuario = false;
         int index = 0;
@@ -42,14 +44,14 @@ public class UsuarioController {
 
         if (atualizarUsuario) {
             usuarios.set(index - 1, usuario);
-            return true;
+            return ResponseEntity.ok(true);
         } else {
-            return false;
+            return ResponseEntity.badRequest().body(false);
         }
     }
 
-    @DeleteMapping("/usuarios/{id}")
-    public boolean deletarUsuario(@PathVariable("id") int id) {
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Boolean> deletarUsuario(@PathVariable("id") int id) {
         boolean deletarUsuario = false;
         int index = 0;
 
@@ -65,9 +67,9 @@ public class UsuarioController {
 
         if (deletarUsuario) {
             usuarios.remove(index - 1);
-            return true;
+            return ResponseEntity.ok(true);
         } else {
-            return false;
+            return ResponseEntity.notFound().build();
         }
     }
 }
