@@ -1,6 +1,11 @@
 package github.lipenathan.demo.model;
 
+/**
+ * Esta é uma classe que representa o modelo de dados de usuários da aplicação.
+ * @author fnanjos
+ */
 public class Usuario {
+    private int id;
     private String nome;
     private String email;
     private String senha;
@@ -33,6 +38,22 @@ public class Usuario {
 
     public void setSenha(String senha) {
         this.senha = senha;
+    }
+
+    /**
+     * getter do id de usuário
+     * @return inteiro que identifica este usuário como único na aplicação
+     */
+    public int getId() {
+        return id;
+    }
+
+    /**
+     * mét0do para setar id do usuário
+     * @param id
+     */
+    public void setId(int id) {
+        this.id = id;
     }
 
     @Override
