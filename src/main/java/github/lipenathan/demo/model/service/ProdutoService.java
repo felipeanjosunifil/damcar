@@ -28,7 +28,7 @@ public class ProdutoService {
      * Mét0do que busca um produto por id
      * @param id do produto
      * @return Produto buscado
-     * @throws Exception quando o id específicado não existe
+     * @throws Exception quando o id específicado não existe.
      */
     public Produto getProdutoPorId(int id) throws Exception {
         Produto produto = null;
