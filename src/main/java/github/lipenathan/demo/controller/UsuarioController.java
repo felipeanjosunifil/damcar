@@ -26,6 +26,16 @@ public class UsuarioController {
         return ResponseEntity.ok(usuarios);
     }
 
+    @GetMapping("/consulta")
+    public ResponseEntity<List<Usuario>> consultarUsuarios(@RequestParam("nome") String nome, @RequestParam("email") String email) {
+        List<Usuario> usuariosEncontrados;
+
+        usuariosEncontrados = usuarios.stream().filter(usuario -> usuario.getNome().contains(nome)).toList();
+
+        return ResponseEntity.ok(usuariosEncontrados);
+    }
+
+
     @PutMapping("/editar")
     public ResponseEntity<Boolean> editarUsuario(@RequestBody Usuario usuario) {
 
