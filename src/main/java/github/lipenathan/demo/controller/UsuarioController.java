@@ -1,47 +1,52 @@
 package github.lipenathan.demo.controller;
 
 import github.lipenathan.demo.model.Usuario;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.List;
 
 @RestController
+@RequestMapping("/usuarios")
 public class UsuarioController {
 
     private int ID = 0;
 
     List<Usuario> usuarios = new ArrayList<>();
 
-    @PostMapping("/usuarios/novo")
-    public boolean novoUsuario(@RequestBody Usuario usuario) {
+    @PostMapping("/novo")
+    public ResponseEntity<Boolean> novoUsuario(@RequestBody Usuario usuario) {
 
         usuario.setId(++ID);
         usuarios.add(usuario);
-        return true;
+        return ResponseEntity.status(201).body(true);
     }
 
-    @GetMapping("/usuarios")
-    public List<Usuario> getUsuarios() {
-        return usuarios;
+    @GetMapping
+    public ResponseEntity<List<Usuario>> getUsuarios() {
+        return ResponseEntity.ok(usuarios);
     }
 
-    @PutMapping("/usuarios/atualizar")
-    public boolean aualizarUsuario(@RequestBody Usuario usuario) {
+    @PutMapping("/atualizar")
+    public ResponseEntity<Boolean> aualizarUsuario(@RequestBody Usuario usuario) {
+
+        boolean atualizado = false;
 
         for (Usuario u : usuarios) {
             if (u.getId() == usuario.getId()) {
+                atualizado = true;
                 u.setNome(usuario.getNome());
                 u.setEmail(usuario.getEmail());
                 u.setSenha(usuario.getSenha());
             }
         }
 
-        return true;
+        return ResponseEntity.ok(atualizado);
     }
 
-    @DeleteMapping("/usuarios/{id}")
-    public boolean deletarUsuario(@PathVariable("id") int id) {
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Boolean> deletarUsuario(@PathVariable("id") int id) {
         int index = -1;
         int deletar = 0;
         boolean deletou;
@@ -59,6 +64,10 @@ public class UsuarioController {
 
         deletou = usuarios.removeIf(u -> u.getId() == id); //lógica mais simples de deleção
 
-        return deletou;
+        if (deletou) {
+            return ResponseEntity.ok(true);
+        } else {
+            return ResponseEntity.notFound().build();
+        }
     }
 }
