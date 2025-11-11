@@ -1,10 +1,9 @@
 package github.lipenathan.demo.controller;
 
 import github.lipenathan.demo.model.Usuario;
+import github.lipenathan.demo.model.service.UsuarioService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.ArrayList;
 import java.util.List;
 
 
@@ -12,18 +11,22 @@ import java.util.List;
 @RequestMapping("/usuarios")
 public class UsuarioController {
 
-    private int id = 0;
-    private List<Usuario> usuarios = new ArrayList<>();
+    private UsuarioService usuarioService = new UsuarioService();
 
     @PostMapping("/novo")
-    public ResponseEntity<Boolean> novoUsuario(@RequestBody Usuario usuario) {
-        usuario.setId(++id);
-        usuarios.add(usuario);
-        return ResponseEntity.status(201).body(true);
+    public ResponseEntity<?> novoUsuario(@RequestBody Usuario usuario) {
+
+        try {
+            usuarioService.novoUsuario(usuario);
+            return ResponseEntity.status(201).body(true);
+        } catch (Exception e) {
+            return ResponseEntity.status(400).body("Ocorreu um erro:\n" + e.getMessage());
+        }
     }
 
     @GetMapping
     public ResponseEntity<List<Usuario>> getUsuarios() {
+        List<Usuario> usuarios = usuarioService.getUsuarios();
         return ResponseEntity.ok(usuarios);
     }
 
@@ -31,29 +34,21 @@ public class UsuarioController {
     public ResponseEntity<List<Usuario>> consultaUsuarios(@RequestParam("email") String email, @RequestParam("nome") String nome) {
         List<Usuario> usuariosEncontrados;
 
-        usuariosEncontrados = usuarios.stream().filter(usuario -> usuario.getEmail().contains(email) && usuario.getNome().contains(nome)).toList();
+        usuariosEncontrados = usuarioService.consultaUsuarios(email, nome);
 
         return ResponseEntity.ok(usuariosEncontrados);
     }
 
     @DeleteMapping("/apagar/{id}")
     public ResponseEntity<Boolean> apagarUsuario(@PathVariable("id") int id) {
-        boolean deletou = usuarios.removeIf(usuario -> usuario.getId() == id);
+        boolean deletou = usuarioService.apagarUsuario(id);
         return ResponseEntity.ok(deletou);
     }
 
     @PutMapping("/atualizar")
     public ResponseEntity<Boolean> atualizarUsuario(@RequestBody Usuario usuario) {
-        boolean atualizou = false;
 
-        for (Usuario usuarioAux : usuarios) {
-            if (usuarioAux.getId() == usuario.getId()) {
-                usuarioAux.setNome(usuario.getNome());
-                usuarioAux.setEmail(usuario.getEmail());
-                usuarioAux.setSenha(usuario.getSenha());
-                atualizou = true;
-            }
-        }
+        boolean atualizou = usuarioService.atualizarUsuario(usuario);
 
         return ResponseEntity.ok(atualizou);
     }
