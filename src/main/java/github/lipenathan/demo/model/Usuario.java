@@ -1,4 +1,4 @@
-package github.lipenathan.demo.modelo;
+package github.lipenathan.demo.model;
 
 public class Usuario {
     private int id;

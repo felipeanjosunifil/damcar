@@ -1,85 +1,58 @@
 package github.lipenathan.demo.controller;
 
-import github.lipenathan.demo.modelo.Usuario;
+import github.lipenathan.demo.model.Usuario;
+import github.lipenathan.demo.model.service.UsuarioService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import java.util.ArrayList;
 import java.util.List;
 
 @RestController
 @RequestMapping("/usuarios")
 public class UsuarioController {
 
-    private int id = 0;
-    private List<Usuario> usuarios = new ArrayList<>();
+    UsuarioService usuarioService = new UsuarioService();
 
     @PostMapping("/novo")
-    public ResponseEntity<Boolean> novoUsuario(@RequestBody Usuario usuario) {
-        usuario.setId(++id);
-        usuarios.add(usuario);
-
-        return ResponseEntity.status(201).body(true);
+    public ResponseEntity<?> novoUsuario(@RequestBody Usuario usuario) {
+        try {
+            usuarioService.novoUsuario(usuario);
+            return ResponseEntity.status(201).body(true);
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
     }
 
     @GetMapping
     public ResponseEntity<List<Usuario>> getUsuarios() {
+        List<Usuario> usuarios = usuarioService.getUsuarios();
         return ResponseEntity.ok(usuarios);
     }
 
     @GetMapping("/consulta")
     public ResponseEntity<List<Usuario>> consultarUsuarios(@RequestParam("nome") String nome, @RequestParam("email") String email) {
-        List<Usuario> usuariosEncontrados;
-
-        usuariosEncontrados = usuarios.stream().filter(usuario -> usuario.getNome().contains(nome)).toList();
-
+        List<Usuario> usuariosEncontrados = usuarioService.consultarUsuarios(nome, email);
         return ResponseEntity.ok(usuariosEncontrados);
     }
 
 
     @PutMapping("/editar")
-    public ResponseEntity<Boolean> editarUsuario(@RequestBody Usuario usuario) {
+    public ResponseEntity<?> editarUsuario(@RequestBody Usuario usuario) {
 
-        boolean atualizarUsuario = false;
-        int index = 0;
-
-        for (Usuario usuarioAux: usuarios) {
-
-            if (!atualizarUsuario) {
-                index++;
-            }
-            if (usuarioAux.getId() == usuario.getId()) {
-                atualizarUsuario = true;
-            }
-        }
-
-        if (atualizarUsuario) {
-            usuarios.set(index - 1, usuario);
-            return ResponseEntity.ok(true);
-        } else {
-            return ResponseEntity.badRequest().body(false);
+        try {
+            boolean atualizou = usuarioService.editarUsuario(usuario);
+            return ResponseEntity.ok(atualizou);
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Boolean> deletarUsuario(@PathVariable("id") int id) {
-        boolean deletarUsuario = false;
-        int index = 0;
-
-        for (Usuario usuarioAux: usuarios) {
-
-            if (!deletarUsuario) {
-                index++;
-            }
-            if (usuarioAux.getId() == id) {
-                deletarUsuario = true;
-            }
-        }
-
-        if (deletarUsuario) {
-            usuarios.remove(index - 1);
-            return ResponseEntity.ok(true);
-        } else {
-            return ResponseEntity.notFound().build();
+    public ResponseEntity<?> deletarUsuario(@PathVariable("id") int id) {
+        try {
+            boolean deletou = usuarioService.deletarUsuario(id);
+            return ResponseEntity.ok(deletou);
+        } catch (Exception e) {
+            return ResponseEntity.status(404).body(e.getMessage());
         }
     }
 }
