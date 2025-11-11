@@ -2,6 +2,7 @@ package github.lipenathan.demo.controller;
 
 import github.lipenathan.demo.model.Usuario;
 import github.lipenathan.demo.model.service.UsuarioService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
@@ -11,7 +12,12 @@ import java.util.List;
 @RequestMapping("/usuarios")
 public class UsuarioController {
 
-    private UsuarioService usuarioService = new UsuarioService();
+    private UsuarioService usuarioService;
+
+    @Autowired
+    public UsuarioController(UsuarioService usuarioService) {
+        this.usuarioService = usuarioService;
+    }
 
     @PostMapping("/novo")
     public ResponseEntity<?> novoUsuario(@RequestBody Usuario usuario) {
