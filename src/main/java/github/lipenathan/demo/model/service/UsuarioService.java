@@ -34,12 +34,17 @@ public class UsuarioService {
         return usuariosEncontrados;
     }
 
-    public boolean apagarUsuario(int id) {
+    public boolean apagarUsuario(int id) throws Exception {
         boolean deletou = usuarios.removeIf(usuario -> usuario.getId() == id);
+
+        if (!deletou) {
+            throw new Exception("Usuário com id " + id + " não encontrado");
+        }
+
         return deletou;
     }
 
-    public boolean atualizarUsuario(Usuario usuario) {
+    public boolean atualizarUsuario(Usuario usuario) throws Exception {
         boolean atualizou = false;
 
         for (Usuario usuarioAux : usuarios) {
@@ -49,6 +54,10 @@ public class UsuarioService {
                 usuarioAux.setSenha(usuario.getSenha());
                 atualizou = true;
             }
+        }
+
+        if (!atualizou) {
+            throw new Exception("Usuário com id " + id + " não encontrado");
         }
 
         return atualizou;

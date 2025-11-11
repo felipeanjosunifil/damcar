@@ -40,16 +40,23 @@ public class UsuarioController {
     }
 
     @DeleteMapping("/apagar/{id}")
-    public ResponseEntity<Boolean> apagarUsuario(@PathVariable("id") int id) {
-        boolean deletou = usuarioService.apagarUsuario(id);
-        return ResponseEntity.ok(deletou);
+    public ResponseEntity<?> apagarUsuario(@PathVariable("id") int id) {
+        try {
+            usuarioService.apagarUsuario(id);
+            return ResponseEntity.ok(true);
+        } catch (Exception e) {
+            return ResponseEntity.status(404).body(e.getMessage());
+        }
     }
 
     @PutMapping("/atualizar")
-    public ResponseEntity<Boolean> atualizarUsuario(@RequestBody Usuario usuario) {
+    public ResponseEntity<?> atualizarUsuario(@RequestBody Usuario usuario) {
 
-        boolean atualizou = usuarioService.atualizarUsuario(usuario);
-
-        return ResponseEntity.ok(atualizou);
+        try {
+            usuarioService.atualizarUsuario(usuario);
+            return ResponseEntity.ok(true);
+        } catch (Exception e) {
+            return ResponseEntity.status(400).body(e.getMessage());
+        }
     }
 }
