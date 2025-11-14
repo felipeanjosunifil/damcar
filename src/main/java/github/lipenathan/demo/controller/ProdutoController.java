@@ -1,6 +1,6 @@
 package github.lipenathan.demo.controller;
 
-import github.lipenathan.demo.model.Produto;
+import github.lipenathan.demo.model.entity.Produto;
 import github.lipenathan.demo.model.service.ProdutoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;

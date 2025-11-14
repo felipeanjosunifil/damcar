@@ -1,6 +1,6 @@
 package github.lipenathan.demo.model.service;
 
-import github.lipenathan.demo.model.Produto;
+import github.lipenathan.demo.model.entity.Produto;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.*;
 

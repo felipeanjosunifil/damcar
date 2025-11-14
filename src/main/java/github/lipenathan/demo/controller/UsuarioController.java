@@ -1,6 +1,6 @@
 package github.lipenathan.demo.controller;
 
-import github.lipenathan.demo.model.Usuario;
+import github.lipenathan.demo.model.entity.Usuario;
 import github.lipenathan.demo.model.service.UsuarioService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;

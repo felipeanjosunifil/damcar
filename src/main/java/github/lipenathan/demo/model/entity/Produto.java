@@ -1,4 +1,4 @@
-package github.lipenathan.demo.model;
+package github.lipenathan.demo.model.entity;
 
 public class Produto {
     private int id;
