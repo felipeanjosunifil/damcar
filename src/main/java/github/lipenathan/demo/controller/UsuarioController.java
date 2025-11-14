@@ -1,40 +1,38 @@
 package github.lipenathan.demo.controller;
 
 import github.lipenathan.demo.model.Usuario;
+import github.lipenathan.demo.model.service.UsuarioService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.ArrayList;
 import java.util.List;
 
 @RestController
 @RequestMapping("/usuarios")//funciona como um prefixo para os endpoints desta classe
 public class UsuarioController {
 
-    private List<Usuario> usuarios = new ArrayList<>();
-    private int ID = 0;
+    @Autowired
+    private UsuarioService usuarioService;
 
     @PostMapping("/novo")
-    public boolean novoUsuario(@RequestBody Usuario usuario) {
-        usuario.setId(++ID);
-        usuarios.add(usuario);
-        return true;
+    public ResponseEntity<Boolean> novoUsuario(@RequestBody Usuario usuario) {
+        usuarioService.novoUsuario(usuario);
+        return ResponseEntity.status(201).body(true);
     }
 
     @GetMapping
-    public List<Usuario> getUsuarios() {
-        return usuarios;
+    public ResponseEntity<List<Usuario>> getUsuarios() {
+        List<Usuario> usuarios = usuarioService.getUsuarios();
+        return ResponseEntity.ok(usuarios);
     }
 
     @GetMapping("/{id}")
-    public Usuario getUsuario(@PathVariable int id) {
-        Usuario usuario = null;
-
-        for (Usuario u : usuarios) {
-            if (u.getId() == id) {
-                usuario = u;
-            }
+    public ResponseEntity<Usuario> getUsuario(@PathVariable Long id) {
+        try {
+            Usuario usuario = usuarioService.getUsuario(id);
+            return ResponseEntity.ok(usuario);
+        } catch (Exception e) {
+            return ResponseEntity.notFound().build();
         }
-
-        return usuario;
     }
 }
