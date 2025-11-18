@@ -18,10 +18,6 @@ public class UsuarioService {
             throw new Exception("O nome precisa ser preenchido");
         }
 
-        if (usuario.getEmail() == null || usuario.getEmail().isEmpty()) {
-            throw new Exception("O e-mail precisa ser preenchido");
-        }
-
         usuarioRepostory.save(usuario);
         return true;
     }
