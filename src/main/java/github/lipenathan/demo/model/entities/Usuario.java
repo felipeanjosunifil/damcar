@@ -2,6 +2,8 @@ package github.lipenathan.demo.model.entities;
 
 import jakarta.persistence.*;
 
+import java.util.List;
+
 @Entity
 @Table(name = "usuarios")
 public class Usuario {
@@ -10,12 +12,16 @@ public class Usuario {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
     private String nome;
-    private String email;
     private String senha;
+    @OneToOne(cascade = CascadeType.PERSIST)
+    @JoinColumn(name = "documento_id")
+    private Documento documento;
+    @OneToMany(cascade = CascadeType.PERSIST)
+    @JoinColumn(name = "usuario_id")
+    private List<Contato> contatos;
 
-    public Usuario(String nome, String email, String senha) {
+    public Usuario(String nome, String senha) {
         this.nome = nome;
-        this.email = email;
         this.senha = senha;
     }
 
@@ -27,14 +33,6 @@ public class Usuario {
 
     public void setNome(String nome) {
         this.nome = nome;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
     }
 
     public String getSenha() {
@@ -53,11 +51,26 @@ public class Usuario {
         this.id = id;
     }
 
+    public Documento getDocumento() {
+        return documento;
+    }
+
+    public void setDocumento(Documento documento) {
+        this.documento = documento;
+    }
+
+    public List<Contato> getContatos() {
+        return contatos;
+    }
+
+    public void setContatos(List<Contato> contatos) {
+        this.contatos = contatos;
+    }
+
     @Override
     public String toString() {
         return "Usuario{" +
                 "nome='" + nome + '\'' +
-                ", email='" + email + '\'' +
                 ", senha='" + senha + '\'' +
                 '}';
     }

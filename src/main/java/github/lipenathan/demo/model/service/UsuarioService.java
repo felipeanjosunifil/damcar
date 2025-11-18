@@ -18,10 +18,6 @@ public class UsuarioService {
             throw new Exception("O nome do usuário é obrigatório.");
         }
 
-        if (usuario.getEmail() == null || usuario.getEmail().isEmpty()) {
-            throw new Exception("O e-mail do usuário é obrigatório.");
-        }
-
         usuarioRepository.save(usuario);
 
         return true;
