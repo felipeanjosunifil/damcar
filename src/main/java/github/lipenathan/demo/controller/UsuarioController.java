@@ -1,6 +1,6 @@
 package github.lipenathan.demo.controller;
 
-import github.lipenathan.demo.model.Usuario;
+import github.lipenathan.demo.model.entities.Usuario;
 import github.lipenathan.demo.model.service.UsuarioService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -37,16 +37,16 @@ public class UsuarioController {
     }
 
     @GetMapping("/consulta")
-    public ResponseEntity<List<Usuario>> consultaUsuarios(@RequestParam("email") String email, @RequestParam("nome") String nome) {
+    public ResponseEntity<List<Usuario>> consultaUsuarios(@RequestParam("nome") String nome) {
         List<Usuario> usuariosEncontrados;
 
-        usuariosEncontrados = usuarioService.consultaUsuarios(email, nome);
+        usuariosEncontrados = usuarioService.consultaUsuarios(nome);
 
         return ResponseEntity.ok(usuariosEncontrados);
     }
 
     @DeleteMapping("/apagar/{id}")
-    public ResponseEntity<?> apagarUsuario(@PathVariable("id") int id) {
+    public ResponseEntity<?> apagarUsuario(@PathVariable("id") Long id) {
         try {
             usuarioService.apagarUsuario(id);
             return ResponseEntity.ok(true);

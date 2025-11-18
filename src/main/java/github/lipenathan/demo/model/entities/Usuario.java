@@ -1,11 +1,17 @@
-package github.lipenathan.demo.model;
+package github.lipenathan.demo.model.entities;
+
+import jakarta.persistence.*;
 
 /**
  * Esta é uma classe que representa o modelo de dados de usuários da aplicação.
  * @author fnanjos
  */
+@Entity
+@Table(name = "usuarios")
 public class Usuario {
-    private int id;
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private Long id;
     private String nome;
     private String email;
     private String senha;
@@ -14,6 +20,9 @@ public class Usuario {
         this.nome = nome;
         this.email = email;
         this.senha = senha;
+    }
+
+    public Usuario() {
     }
 
     public String getNome() {
@@ -44,7 +53,7 @@ public class Usuario {
      * getter do id de usuário
      * @return inteiro que identifica este usuário como único na aplicação
      */
-    public int getId() {
+    public Long getId() {
         return id;
     }
 
@@ -52,7 +61,7 @@ public class Usuario {
      * mét0do para setar id do usuário
      * @param id
      */
-    public void setId(int id) {
+    public void setId(Long id) {
         this.id = id;
     }
 

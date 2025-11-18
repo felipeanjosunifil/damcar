@@ -1,16 +1,17 @@
 package github.lipenathan.demo.model.service;
 
 
-import github.lipenathan.demo.model.Usuario;
+import github.lipenathan.demo.model.entities.Usuario;
+import github.lipenathan.demo.model.repository.UsuarioRepostory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import java.util.ArrayList;
 import java.util.List;
 
 @Service
 public class UsuarioService {
 
-    private int id = 0;
-    private List<Usuario> usuarios = new ArrayList<>();
+    @Autowired
+    private UsuarioRepostory usuarioRepostory;
 
     public boolean novoUsuario(Usuario usuario) throws Exception {
         if (usuario.getNome() == null || usuario.getNome().isEmpty()) {
@@ -21,47 +22,38 @@ public class UsuarioService {
             throw new Exception("O e-mail precisa ser preenchido");
         }
 
-        usuario.setId(++id);
-        usuarios.add(usuario);
+        usuarioRepostory.save(usuario);
         return true;
     }
 
     public List<Usuario> getUsuarios() {
-        return usuarios;
+        Iterable<Usuario> usuarios = usuarioRepostory.findAll();
+
+        return (List<Usuario>) usuarios;
     }
 
-    public List<Usuario> consultaUsuarios(String email, String nome) {
-        List<Usuario> usuariosEncontrados;
-        usuariosEncontrados = usuarios.stream().filter(usuario -> usuario.getEmail().contains(email) && usuario.getNome().contains(nome)).toList();
-        return usuariosEncontrados;
+    public List<Usuario> consultaUsuarios(String nome) {
+        Iterable<Usuario> usuariosEncontrados = usuarioRepostory.findByNome(nome);
+
+        return (List<Usuario>) usuariosEncontrados;
     }
 
-    public boolean apagarUsuario(int id) throws Exception {
-        boolean deletou = usuarios.removeIf(usuario -> usuario.getId() == id);
+    public boolean apagarUsuario(Long id) throws Exception {
 
-        if (!deletou) {
+        try {
+            usuarioRepostory.deleteById(id);
+            return true;
+        } catch (Exception e) {
             throw new Exception("Usuário com id " + id + " não encontrado");
         }
-
-        return deletou;
     }
 
     public boolean atualizarUsuario(Usuario usuario) throws Exception {
-        boolean atualizou = false;
-
-        for (Usuario usuarioAux : usuarios) {
-            if (usuarioAux.getId() == usuario.getId()) {
-                usuarioAux.setNome(usuario.getNome());
-                usuarioAux.setEmail(usuario.getEmail());
-                usuarioAux.setSenha(usuario.getSenha());
-                atualizou = true;
-            }
+        try {
+            usuarioRepostory.save(usuario);
+            return true;
+        } catch (Exception e) {
+            throw new Exception("Usuário com id " + usuario.getId() + " não encontrado");
         }
-
-        if (!atualizou) {
-            throw new Exception("Usuário com id " + id + " não encontrado");
-        }
-
-        return atualizou;
     }
 }
