@@ -1,16 +1,16 @@
 package github.lipenathan.demo.model.service;
 
-import github.lipenathan.demo.model.Usuario;
+import github.lipenathan.demo.model.entities.Usuario;
+import github.lipenathan.demo.model.repository.UsuarioRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
-import java.util.ArrayList;
 import java.util.List;
 
 @Service
 public class UsuarioService {
 
-    private int id = 0;
-    private List<Usuario> usuarios = new ArrayList<>();
+    @Autowired
+    private UsuarioRepository usuarioRepository;
 
     public boolean novoUsuario(Usuario usuario) throws Exception {
 
@@ -22,67 +22,40 @@ public class UsuarioService {
             throw new Exception("O e-mail do usuário é obrigatório.");
         }
 
-        usuario.setId(++id);
-        usuarios.add(usuario);
+        usuarioRepository.save(usuario);
 
         return true;
     }
 
     public List<Usuario> getUsuarios() {
-        return usuarios;
+        Iterable<Usuario> usuarios = usuarioRepository.findAll();
+
+        return (List<Usuario>) usuarios;
     }
 
-    public List<Usuario> consultarUsuarios(String nome, String email) {
-        List<Usuario> usuariosEncontrados;
-
-        usuariosEncontrados = usuarios.stream().filter(usuario -> usuario.getNome().contains(nome)).toList();
+    public List<Usuario> consultarUsuarios(String nome) {
+        List<Usuario> usuariosEncontrados = usuarioRepository.findByNome(nome);
 
         return usuariosEncontrados;
     }
 
     public Boolean editarUsuario(Usuario usuario) throws Exception {
-
-        boolean atualizarUsuario = false;
-        int index = 0;
-
-        for (Usuario usuarioAux: usuarios) {
-
-            if (!atualizarUsuario) {
-                index++;
-            }
-            if (usuarioAux.getId() == usuario.getId()) {
-                atualizarUsuario = true;
-            }
-        }
-
-        if (atualizarUsuario) {
-            usuarios.set(index - 1, usuario);
+        try {
+            usuarioRepository.save(usuario);
             return true;
-        } else {
-            throw new Exception("Usuário com id " + usuario.getId() + " não foi encontrado.");
+        } catch(Exception e) {
+            throw new Exception("Ocorreu um erro " + e.getMessage());
         }
     }
 
-    public boolean deletarUsuario(int id) throws Exception {
-        boolean deletarUsuario = false;
-        int index = 0;
-
-        for (Usuario usuarioAux: usuarios) {
-
-            if (!deletarUsuario) {
-                index++;
-            }
-            if (usuarioAux.getId() == id) {
-                deletarUsuario = true;
-            }
-        }
-
-        if (deletarUsuario) {
-            usuarios.remove(index - 1);
+    public boolean deletarUsuario(Long id) throws Exception {
+        try {
+            usuarioRepository.deleteById(id);
             return true;
-        } else {
-            throw new Exception("Usuário com id " + id + " não foi encontrado.");
+        } catch (Exception e) {
+            throw new Exception("Ocorreu um erro " + e.getMessage());
         }
     }
-
 }
+
+//create table(
